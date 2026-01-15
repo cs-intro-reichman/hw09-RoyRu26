@@ -3,8 +3,22 @@
  *  However, users of this class are not aware of the Node objects. As far as they are concerned,
  *  the class represents a list of CharData objects. Likwise, the API of the class does not
  *  mention the existence of the Node objects). */
-public class List {
 
+public class List {
+    //public static void main(String[] args) {
+    //    List list = new List();
+    //    list.update(' ');
+    //    list.update('e');
+    //    list.update('e');
+    //    list.update('t');
+    //    list.update('t');
+    //    list.update('i');
+    //    list.update('m');
+    //    list.update('m');
+    //    list.update('o');
+    //    list.update('c');
+    //    System.out.println(list);
+    //}
     // Points to the first node in this list
     private Node first;
 
@@ -24,26 +38,47 @@ public class List {
 
     /** Returns the CharData of the first element in this list. */
     public CharData getFirst() {
-        // Your code goes here
+        if (first == null){
+            return null;
+        }
         return first.cp;
     }
 
     /** GIVE Adds a CharData object with the given character to the beginning of this list. */
     public void addFirst(char chr) {
-        // Your code goes here
+        CharData newCD = new CharData(chr);
+        Node newFirst = new Node(newCD , first);
+        first = newFirst;
+        size ++;
     }
     
     /** GIVE Textual representation of this list. */
     public String toString() {
-        // Your code goes here
-        return "";
+        String res = "";
+        Node current = first;
+        while (current != null) {
+            res += current.toString();
+            if (current.next != null) {
+                res += "\n";
+            }
+            current = current.next;
+        }
+        return res;
     }
 
     /** Returns the index of the first CharData object in this list
      *  that has the same chr value as the given char,
      *  or -1 if there is no such object in this list. */
     public int indexOf(char chr) {
-        // Your code goes here
+        int i = 0;
+        Node current = first;
+        while (current != null) {
+            if (current.cp.equals(chr)) {
+                return i;
+            }
+            current = current.next;
+            i ++;
+        }
         return -1;
     }
 
@@ -51,15 +86,41 @@ public class List {
      *  increments its counter. Otherwise, adds a new CharData object with the
      *  given chr to the beginning of this list. */
     public void update(char chr) {
-        // Your code goes here
+        Node current = first;
+        Boolean found = false;
+        while (current != null) {
+            if (current.cp.equals(chr)) {
+                current.cp.count ++;
+                found = true;
+            }
+            current = current.next;
+        }
+        if (!found) {
+            this.addFirst(chr);
+        }
     }
 
     /** GIVE If the given character exists in one of the CharData objects
      *  in this list, removes this CharData object from the list and returns
      *  true. Otherwise, returns false. */
     public boolean remove(char chr) {
-        // Your code goes here
-        return false;
+        Node current = first;
+        Node prev = null;
+        while (current != null && !current.cp.equals(chr)) {
+            prev = current;
+            current = current.next;
+        }
+        if (current == null) {
+            return false;
+        }
+        if (prev == null) {
+            first = first.next;
+        }
+        else{
+            prev.next = current.next;
+        }
+        size --;
+        return true;
     }
 
     /** Returns the CharData object at the specified index in this list. 
