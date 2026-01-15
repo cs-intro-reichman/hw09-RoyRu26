@@ -38,8 +38,18 @@ public class LanguageModel {
 
     // Computes and sets the probabilities (p and cp fields) of all the
 	// characters in the given list. */
-	void calculateProbabilities(List probs) {				
-		// Your code goes here
+	void calculateProbabilities(List probs) {	
+        int total = 0;
+        double cpSum = 0.0;
+        CharData[] chdArr = probs.toArray();
+        for (CharData chd : chdArr) {
+            total += chd.count;
+        }
+        for (CharData chd : chdArr) {
+            chd.p = (double)chd.count/total;
+            cpSum += chd.p;
+            chd.cp = cpSum;
+        }
 	}
 
     // Returns a random character from the given probabilities list.
@@ -72,5 +82,20 @@ public class LanguageModel {
 
     public static void main(String[] args) {
 		// Your code goes here
+        List list = new List();
+        list.update(' ');
+        list.update('e');
+        list.update('e');
+        list.update('t');
+        list.update('t');
+        list.update('i');
+        list.update('m');
+        list.update('m');
+        list.update('o');
+        list.update('c');
+         
+        LanguageModel lm = new LanguageModel(2, 20);
+        lm.calculateProbabilities(list);
+        System.out.println(list);
     }
 }
