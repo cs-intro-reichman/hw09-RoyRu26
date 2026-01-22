@@ -79,10 +79,8 @@ public class LanguageModel {
     // Returns a random character from the given probabilities list.
     char getRandomChar(List probs) {
         double r = randomGenerator.nextDouble();
-        System.out.println("the random number is: " + r);
         CharData[] chdArr = probs.toArray();
         for (CharData chd : chdArr) {
-            System.out.println(chd.chr + " " + chd.cp);
             if (chd.cp > r) {
                 return chd.chr;
             }
@@ -130,11 +128,11 @@ public class LanguageModel {
         list.update('o');
         list.update('c');
 
-        LanguageModel lm = new LanguageModel(2, 20);
+        LanguageModel lm = new LanguageModel(3, 27);
         lm.calculateProbabilities(list);
         //System.out.println(list);
         //System.out.println(lm.getRandomChar(list));
-        //lm.train("originofspecies.txt");
+        lm.train("originofspecies.txt");
         System.out.println(lm.getRandomChar(list));
     }
 }
