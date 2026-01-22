@@ -63,16 +63,15 @@ public class LanguageModel {
     // characters in the given list. */
     void calculateProbabilities(List probs) {
         int total = 0;
-        double cpSum = 0.0;
-        CharData[] chdArr = probs.toArray();
-        for (CharData chd : chdArr) {
-            total += chd.count;
+        int running = 0;
+        CharData[] arr = probs.toArray();
+        for (CharData cd : arr) {
+            total += cd.count;
         }
-        for (CharData chd : chdArr) {
-            chd.p = (double) chd.count / total;
-            cpSum += chd.p;
-            chd.cp = Math.round(cpSum * 1000) / 1000.0;
-            ;
+        for (CharData cd : arr) {
+            running += cd.count;
+            cd.p = (double) cd.count / total;
+            cd.cp = (double) running / total;
         }
     }
 
@@ -116,23 +115,16 @@ public class LanguageModel {
 
     public static void main(String[] args) {
         // Your code goes here
+        String word = "computer_science";
         List list = new List();
-        list.update(' ');
-        list.update('e');
-        list.update('e');
-        list.update('t');
-        list.update('t');
-        list.update('i');
-        list.update('m');
-        list.update('m');
-        list.update('o');
-        list.update('c');
-
-        LanguageModel lm = new LanguageModel(3, 27);
+        for (int i = 0; i < word.length(); i++) {
+            list.update(word.charAt(word.length() - 1 - i));
+        }
+        LanguageModel lm = new LanguageModel(2, 20);
         lm.calculateProbabilities(list);
         //System.out.println(list);
         //System.out.println(lm.getRandomChar(list));
-        lm.train("originofspecies.txt");
-        System.out.println(lm.getRandomChar(list));
+        //lm.train("originofspecies.txt");
+        System.out.println(list);
     }
 }
