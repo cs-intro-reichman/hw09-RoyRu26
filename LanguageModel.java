@@ -99,8 +99,21 @@ public class LanguageModel {
      * @return the generated text
      */
     public String generate(String initialText, int textLength) {
-        // Your code goes here
-        return "";
+        String res = initialText;
+        if (initialText.length() < windowLength) {
+            return res;
+        }
+        String window = initialText.substring(initialText.length() - windowLength);
+        for (int i = 0; i < textLength; i++) {
+            List probs = CharDataMap.get(window);
+            if (probs == null) {
+                break;
+            }
+            char next = getRandomChar(probs);
+            res += next;
+            window = window.substring(1) + next;
+        }
+        return res;
     }
 
     /** Returns a string representing the map of this language model. */
@@ -114,17 +127,20 @@ public class LanguageModel {
     }
 
     public static void main(String[] args) {
-        // Your code goes here
-        String word = "computer_science";
-        List list = new List();
-        for (int i = 0; i < word.length(); i++) {
-            list.update(word.charAt(word.length() - 1 - i));
-        }
-        LanguageModel lm = new LanguageModel(2, 20);
-        lm.calculateProbabilities(list);
-        //System.out.println(list);
-        //System.out.println(lm.getRandomChar(list));
-        //lm.train("originofspecies.txt");
-        System.out.println(list);
+        int windowLength = Integer.parseInt(args[0]);
+        String initialText = args[1];
+        int generatedTextLength = Integer.parseInt(args[2]);
+        Boolean randomGeneration = args[3].equals("random");
+        String fileName = args[4];
+        // Create the LanguageModel object
+        LanguageModel lm;
+        if (randomGeneration)
+            lm = new LanguageModel(windowLength);
+        else
+            lm = new LanguageModel(windowLength, 20);
+        // Trains the model, creating the map.
+        lm.train(fileName);
+        // Generates text, and prints it.
+        System.out.println(lm.generate(initialText, generatedTextLength));
     }
 }
